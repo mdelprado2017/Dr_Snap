@@ -33,7 +33,9 @@ class RecomenderSystem():
         blocks_list = []
         deadCode_list = []
 
+        
         is_dead_code = dict_deadCode['result'].get('total_dead_code_scripts', 1)
+
         if (is_dead_code != 0):
             # explanations lists about what is deadCode
             explanation_phrases = self.language_manager.deadcode_explanation_phrases
@@ -83,6 +85,8 @@ class RecomenderSystem():
             }
         else:
             feedback = None
+
+
         return feedback
     
     def recomender_sprite(self, dict_spriteNaming) -> dict:
@@ -181,9 +185,12 @@ class RecomenderSystem():
             }
         else:
             feedback = None
+
+
         return feedback    
     
     def recomender_duplicatedScripts(self, dict_duplicatedScripts, dict_refactoredDups) ->dict:
+        
         type = "Duplicates"
         message = ""
         explanation = ""
@@ -191,6 +198,7 @@ class RecomenderSystem():
         blocks = []
         duplicatedScripts = 0
         dup_list = []
+      
 
         # Calc the number of duplicatedScripts
         for scripts in dict_refactoredDups: # scripts has all the duplicatedScripts in a individual sprite
@@ -256,7 +264,7 @@ class RecomenderSystem():
         if the user has solved it. And if not uses the default messages.
         """
         new_message = ""
-
+        print("----------------------ggg------------------------")
         if (self.curr_type != ""):
             if (self.curr_type == "Backdrops"):
                 fail_message = self.language_manager.upgrade_feedback_phrases['Backdrops']['fail']
@@ -285,4 +293,6 @@ class RecomenderSystem():
             # Select one of the motivational phrases to start
             rand_message_index = random.randint(0, len(self.motivational_phrases) - 1)
             new_message += self.motivational_phrases[rand_message_index]    
+        
+        print("----------------------final------------------------")
         return new_message

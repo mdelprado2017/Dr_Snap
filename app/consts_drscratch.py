@@ -1,11 +1,12 @@
 PLUGIN_DEADCODE_LIST_EVENT_VARS = [
-    "event_broadcastandwait", "event_whenflagclicked",
+    "event_broadcastandwait", "receiveGo",
     "event_whengreaterthan", "event_whenkeypressed",
     "event_whenthisspriteclicked", "event_whenbackdropswitchesto",
     "procedures_prototype", "procedures_definition"
 ]
 
 PLUGIN_BACKDROPNAMING_DEFAULT_NAMES = [
+    "Stage",
     "backdrop",
     "fondo",
     "Fondos",
@@ -23,11 +24,11 @@ PLUGIN_SPRITENAMING_DEFAULT_NAMES = [
 ]
 
 PLUGIN_DEADCODE_LIST_LOOP_BLOCKS = [
-    "control_repeat",
-    "control_forever",
-    "control_if",
-    "control_if_else",
-    "control_repeat_until"
+    "doRepeat",
+    "doForever",
+    "doIf",
+    "doIfElse",
+    "doUntil"
 ]
 
 PLUGIN_MASTERY_MAX_POINTS = 21
@@ -69,4 +70,10 @@ URL_SCRATCH_SERVER = 'https://projects.scratch.mit.edu'
 # URL_GETSB3 = 'http://127.0.0.1:3030/api'
 URL_GETSB3 = 'http://127.0.0.1:3000/api'
 URL_SCRATCH_API = 'https://api.scratch.mit.edu/projects'
+#URL_SNAP_API = 'https://api.snap.berkeley.edu/projects'
+#URL_SNAP_API = 'https://snap.berkeley.edu/api/projects'
+URL_SNAP_API = 'https://snap.berkeley.edu/projects'
+
+
+
 

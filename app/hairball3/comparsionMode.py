@@ -175,21 +175,10 @@ class ComparsionMode(Plugin):
     
     
     def finalize(self) -> dict:
-
+        
+        print("---------------------gggggggggggggg")
         self.analyze()
-
-        """
-        result = ("%d duplicate scripts found" % self.total_duplicate)
-        result += "\n"
-        for duplicate in self.list_duplicate:
-            result += str(duplicate)
-            result += "\n"
-        """
-        #self.dict_mastery['description'] = result
-        #self.dict_mastery['total_duplicate_scripts'] = self.total_duplicate
-        #self.dict_mastery['list_duplicate_scripts'] = self.list_duplicate
-        #self.dict_mastery['duplicates'] = self.duplicates
-        #self.dict_mastery['list_csv'] =  self.list_csv
+        print("---------------------gggggggggggggg")
         self.dict_mastery['list_changes_scripts'] = self.d_changes_scripts
         self.dict_mastery['list_changes'] = self.d_changes
 

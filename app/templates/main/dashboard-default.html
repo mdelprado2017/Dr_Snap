@@ -551,7 +551,7 @@
                                             {% endif %}                          
                                         </span>
                                             
-                                    <a class="twitter-share-button" data-text="{% blocktrans with points=mastery_vanilla.points.0 %} I have just obtained {{ points }} points analyzing my project in Dr. Scratch! Beat it! @DrScratchTool {% endblocktrans %}"href="https://twitter.com/share">Tweet</a></h2>
+                                    <a class="twitter-share-button" data-text="{% blocktrans with points=mastery_vanilla.points.0 %} I have just obtained {{ points }} points analyzing my project in Dr. Snap! Beat it! @DrSnapTool {% endblocktrans %}"href="https://twitter.com/share">Tweet</a></h2>
                                 </div>
                                 <div class="panel-body" id="original-panel-body">
                                     <div class="container col-md-12">
@@ -574,7 +574,7 @@
     
                                 </div>
                                 {% if url != None %}
-                                    <a href="{{ url }}" target="_blank" id="back-to-project"><span class="glyphicon glyphicon-hand-right"></span>{% trans "Come back to your Scratch project." %}</a>
+                                    <a href="{{ url }}" target="_blank" id="back-to-project"><span class="glyphicon glyphicon-hand-right"></span>{% trans "Come back to your Snap project." %}</a>
                                 {% endif %}
                             </div>
                         </div>
@@ -593,29 +593,6 @@
                                         </h2>
                                     </div>
                                     <div class="panel-body text-left typ">
-                                        <a class="glyphicon glyphicon-repeat"/>
-                                        <a id="duplicated-scripts" data-html="true" class="dropdown" data-toggle="popover" title="{% trans 'Duplicated scripts' %}" 
-                                        data-trigger="manual" href="/learn/duplicatedScripts/"> 
-                                            {{ duplicateScript.number }} {% trans " duplicated scripts." %}
-                                        </a>
-                                        <div id="duplicated-scripts-content" class="collapse">
-                                            <div class="container-fluid">
-                                                {% for k, list_duplicate_blocks in duplicateScript.items %}
-                                                {% if k == 'scripts' %}
-                                                   
-                                                    {% for list_blocks in list_duplicate_blocks %}
-                                                        <pre class="blocks">
-                                                            {{ list_blocks }}
-                                                        </pre>
-                                                    {% endfor %}
-                                                {% endif %}
-                                                {% endfor %}
-                                                {% if duplicateScript.number == 0 %}
-                                                    {% trans 'Your project does not have duplicated scripts, good job!' %}
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <br>
                                         <a class="glyphicon glyphicon-pencil"/>
                                         <a id="bad-smells" data-html="true" class="dropdown" data-toggle="popover" title="{% trans 'Sprite naming' %}" 
                                         data-content="
@@ -683,7 +660,7 @@
                                 <div class="panel-heading" >
                                     <h2 id="score" class="panel-title dark-text">
                                         {% trans "Project certificate"%}
-                                        <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Certificate of the Evaluation of your Scratch Project' %}"></i>
+                                        <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Certificate of the Evaluation of your Snap Project' %}"></i>
                                     </h2>
                                 </div>
                                 <div class="panel-success" style="word-break: break-word;" >
@@ -697,49 +674,7 @@
                         </div>
                     </div>
                     
-                    {% if url != None %}
-                    <div class="improve">
-                        <div class="panel panel-success" id="improve">
-                            <div id="stepfour">
-                                <div class="panel-heading" >
-                                    <h2 id="score" class="panel-title dark-text">
-                                        {% trans "Compare project"%}
-                                        <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Upload the new project in order to compare it with the actual' %}"></i>
-                                    </h2>
-                                </div>
-                                <div class="panel-success" style="word-break: break-word;" >
-                                    <form id="form-compare" name="form" class="project-form" enctype="multipart/form-data" method="post" style="margin: 10px" target="_blank">
-                                        <input type="hidden" name="dashboard_mode" value="Comparison">
-                                        <input type="hidden" name="_urls" value="Url">
-                                        <input type="hidden" name="urlProject" value="{{ url }}">
-                                        {% trans '<input name="urlProject" id="cf-name" class="form-control input-box placeholder" placeholder="http:/scratch.mit.edu/projects/your_number" type="text">' %}
-                                        <p id="project-warning" style="display: none;"><span class='colored-text'>{% trans "Please enter a project!" %}</span></p>
-                                        <div class="form-check">
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                {% trans "Is the new project an update from the original?" %}
-                                            </label>
-                                            <div class="col-md-6" style="padding-left: 25%; padding-top: 8px;">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="same_functionality" id="inlineRadio1" value="True" required>
-                                                    <label class="form-check-label" for="inlineRadio1">{% trans 'Yes' %}</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6" style="padding-right: 25%; padding-top: 8px;">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="same_functionality" id="inlineRadio1" value="False" required>
-                                                    <label class="form-check-label" for="inlineRadio1">{% trans 'No' %}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button id="compare-projects-button"  class="btn btn-primary standard-button">{% trans "Compare projects" %}</button>
-                                        {% csrf_token %}
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    </section>
+                   
                     
                 </section>
 
@@ -757,7 +692,7 @@
                                                     <th>
                                                         <h4>
                                                             {% trans "Level up" %}
-                                                            <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Dimensions Evaluated in your Scratch Project' %}"></i>
+                                                            <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Dimensions Evaluated in your Snap Project' %}"></i>
                                                         </h4>
                                                     </th>
                                                     <th class="col-md-5">
@@ -884,7 +819,7 @@
                                             {% endif %}                          
                                         </span>
                                             
-                                    <a class="twitter-share-button" data-text="{% blocktrans with points=mastery_vanilla.points.0 %} I have just obtained {{ points }} points analyzing my project in Dr. Scratch! Beat it! @DrScratchTool {% endblocktrans %}"href="https://twitter.com/share">Tweet</a></h2>
+                                    <a class="twitter-share-button" data-text="{% blocktrans with points=mastery_vanilla.points.0 %} I have just obtained {{ points }} points analyzing my project in Dr. Snap! Beat it! @DrSnapTool {% endblocktrans %}"href="https://twitter.com/share">Tweet</a></h2>
                                 </div>
                                 <div class="panel-body" id="original-panel-body">
                                     <div class="container col-md-12">
@@ -906,7 +841,7 @@
     
                                 </div>
                                 {% if url != None %}
-                                    <a href="{{ url }}" target="_blank" id="back-to-project"><span class="glyphicon glyphicon-hand-right"></span>{% trans "Come back to your Scratch project." %}</a>
+                                    <a href="{{ url }}" target="_blank" id="back-to-project"><span class="glyphicon glyphicon-hand-right"></span>{% trans "Come back to your Snap project." %}</a>
                                 {% endif %}
                             </div>
                         </div>
@@ -925,29 +860,6 @@
                                         </h2>
                                     </div>
                                     <div class="panel-body text-left typ">
-                                        <a class="glyphicon glyphicon-repeat"/>
-                                        <a id="duplicated-scripts" data-html="true" class="dropdown" data-toggle="popover" title="{% trans 'Duplicated scripts' %}" 
-                                        data-trigger="manual" href="/learn/duplicatedScripts/"> 
-                                            {{ duplicateScript.number }} {% trans " duplicated scripts." %}
-                                        </a>
-                                        <div id="duplicated-scripts-content" class="collapse">
-                                            <div class="container-fluid">
-                                                {% for k, list_duplicate_blocks in duplicateScript.items %}
-                                                {% if k == 'scripts' %}
-                                                    
-                                                    {% for list_blocks in list_duplicate_blocks %}
-                                                        <pre class="blocks">
-                                                            {{ list_blocks }}
-                                                        </pre>
-                                                    {% endfor %}
-                                                {% endif %}
-                                                {% endfor %}
-                                                {% if duplicateScript.number == 0 %}
-                                                    {% trans 'Your project does not have duplicated scripts, good job!' %}
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <br>
                                         <a class="glyphicon glyphicon-pencil"/>
                                         <a id="bad-smells" data-html="true" class="dropdown" data-toggle="popover" title="{% trans 'Sprite naming' %}" 
                                         data-content="
@@ -1015,7 +927,7 @@
                                 <div class="panel-heading" >
                                     <h2 id="score" class="panel-title dark-text">
                                         {% trans "Project certificate"%}
-                                        <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Certificate of the Evaluation of your Scratch Project' %}"></i>
+                                        <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Certificate of the Evaluation of your Snap Project' %}"></i>
                                     </h2>
                                 </div>
                                 <div class="panel-success" style="word-break: break-word;" >
@@ -1028,48 +940,7 @@
                             </div>
                         </div>
                     </div>
-                    {% if url != None %}
-                    <div class="improve">
-                        <div class="panel panel-success" id="improve">
-                            <div id="stepfour">
-                                <div class="panel-heading" >
-                                    <h2 id="score" class="panel-title dark-text">
-                                        {% trans "Compare project"%}
-                                        <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Upload the new project in order to compare it with the actual' %}"></i>
-                                    </h2>
-                                </div>
-                                <div class="panel-success" style="word-break: break-word;" >
-                                    <form id="myForm" name="form" class="project-form" enctype="multipart/form-data" method="post" style="margin: 10px" target="_blank">
-                                        <input type="hidden" name="dashboard_mode" value="Comparison">
-                                        <input type="hidden" name="_urls" value="Url">
-                                        <input type="hidden" name="urlProject" value="{{ url }}">
-                                        {% trans '<input name="urlProject" id="cf-name" class="form-control input-box placeholder" placeholder="http:/scratch.mit.edu/projects/your_number" type="text">' %}
-                                        <div class="form-check">
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                {% trans "Is the new project an update from the original?" %}
-                                            </label>
-                                            <div class="col-md-6" style="padding-left: 25%; padding-top: 8px;">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="same_functionality" id="inlineRadio1" value="True" required>
-                                                    <label class="form-check-label" for="inlineRadio1">{% trans 'Yes' %}</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6" style="padding-right: 25%; padding-top: 8px;">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="same_functionality" id="inlineRadio1" value="False" required>
-                                                    <label class="form-check-label" for="inlineRadio1">{% trans 'No' %}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button id="compare-projects-button"  class="btn btn-primary standard-button">{% trans "Compare projects" %}</button>
-                                        {% csrf_token %}
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}     
-                    </section>
+                   
                     
                 </section>
 
@@ -1088,7 +959,7 @@
                                                     <th>
                                                         <h4>
                                                             {% trans "Level up" %}
-                                                            <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Dimensions Evaluated in your Scratch Project' %}"></i>
+                                                            <i class="bi bi-question-circle small-icon" data-toggle="tooltip" data-placement="right" title="{% trans 'Dimensions Evaluated in your Snap Project' %}"></i>
                                                         </h4>
                                                     </th>
                                                     <th class="col-md-5">

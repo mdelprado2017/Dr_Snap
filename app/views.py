@@ -326,6 +326,7 @@ def build_dictionary_with_automatic_analysis(request, skill_points: dict) -> dic
     filename = None
     project_counter = 0
 
+
     if request.method == 'POST':
         dashboard_mode = request.POST.get('dashboard_mode', 'Default')
 
@@ -348,13 +349,15 @@ def build_dictionary_with_automatic_analysis(request, skill_points: dict) -> dic
                 dict_metrics[project_counter] =  {'Error': 'MultiValueDict'}
         elif '_url' in request.POST:
             form = UrlForm(request.POST)
+            print("forma",form)
             if form.is_valid():
                 url = form.cleaned_data['urlProject']
                 dict_metrics[project_counter] = analysis_by_url(request, url, skill_points)
             else:
+                print("error")
                 dict_metrics[project_counter] =  {'Error': 'MultiValueDict'}
         elif '_urls' in request.POST:
-            projects_file = request.FILES['urlsFile']
+            projects_file = requeprintst.FILES['urlsFile']
             
             if projects_file.content_type.endswith('zip') == False: 
                 # List of urls
@@ -380,6 +383,7 @@ def build_dictionary_with_automatic_analysis(request, skill_points: dict) -> dic
                 'multiproject': True,
                 'num_projects': num_projects
             }
+
 
     return dict_metrics
 
@@ -445,6 +449,16 @@ def contact(request):
     return render(request, user + '/contact-form.html') 
 
 
+def escape_latex_for_url(text):
+    """Escapa caracteres que LaTeX no maneja en URLs"""
+    # Escapa caracteres conflictivos en LaTeX
+    text = text.replace("_", r"\_")  # Escapa guion bajo
+    text = text.replace("&", r"\&")  # Escapa el símbolo "&"
+    text = text.replace("%", r"\%")  # Escapa el símbolo "%"
+    text = text.replace("{", r"\{")  # Escapa las llaves
+    text = text.replace("}", r"\}")  # Escapa las llaves
+    return text
+
 def download_certificate(request):
     """
     Download project's certificate
@@ -458,6 +472,7 @@ def download_certificate(request):
         filename = filename.decode('utf-8') 
         filename = clean_filename(filename)
         print("Filename: ", filename)
+        filename = escape_latex_for_url(filename)
         level = request.POST["level"]
         print("Level: ", level)
 
@@ -1588,52 +1603,6 @@ def statistics(request):
 
 
 
-"""
-def proc_initialization(lines, filename):
-
-
-    dic = {}
-    lLines = lines.split('.sb2')
-    d = ast.literal_eval(lLines[1])
-    keys = d.keys()
-    values = d.values()
-    items = d.items()
-    number = 0
-
-    for keys, values in items:
-        list = []
-        attribute = ""
-        internalkeys = values.keys()
-        internalvalues = values.values()
-        internalitems = values.items()
-        flag = False
-        counterFlag = False
-        i = 0
-        for internalkeys, internalvalues in internalitems:
-            if internalvalues == 1:
-                counterFlag = True
-                for value in list:
-                    if internalvalues == value:
-                        flag = True
-                if not flag:
-                    list.append(internalkeys)
-                    if len(list) < 2:
-                        attribute = str(internalkeys)
-                    else:
-                        attribute = attribute + ", " + str(internalkeys)
-        if counterFlag:
-            number = number + 1
-        d[keys] = attribute
-    dic["initialization"] = d
-    dic["initialization"]["number"] = number
-
-    #Save in DB
-    filename.initialization = number
-    filename.save()
-
-    return dic
-
-"""
 
 
 ###################################

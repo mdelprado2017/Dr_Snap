@@ -1,21 +1,25 @@
 import requests
 import app.consts_drscratch as consts
+from lxml import etree
 
 
 class Project:
 
-    def __init__(self, json_data):
-        self.id = json_data["id"]
-        self.title = json_data["title"]
+    def __init__(self, xml_data):
+        root = etree.fromstring(xml_data)
+        self.id = root.xpath('//snapdata/@remixID')[0]
+        print(f"Remix ID: {self.id}")
 
-        self.description = json_data["description"] if "description" in json_data else None
-        self.instructions = json_data["instructions"] if "instructions" in json_data else None
+        #self.title = json_data["projectname"]
 
-        self.visible = json_data["visibility"] == "visible"
-        self.public = json_data["public"]
-        self.comments_allowed = json_data["comments_allowed"]
-        self.is_published = json_data["is_published"]
-        self.project_token = json_data["project_token"]
+        #self.description = json_data["description"] if "description" in json_data else None
+        #self.instructions = json_data["instructions"] if "instructions" in json_data else None
+
+        #self.visible = json_data["visibility"] == "visible"
+        #self.public = json_data["public"]
+        #self.comments_allowed = json_data["comments_allowed"]
+        #self.is_published = json_data["is_published"]
+        #self.project_token = json_data["project_token"]
 
 
 class RemixtreeProject:
@@ -48,8 +52,52 @@ class ScratchSession:
         }
         
     def get_project(self, project):
+        print("donde")
+        print("PROJECT", project)
         project_id = (project.id if isinstance(project, (RemixtreeProject, Project)) else project)
-        print(requests.get(f'{consts.URL_SCRATCH_API}/{project_id}/', proxies=self.proxies).json())
-        return Project( 
-            requests.get(f'{consts.URL_SCRATCH_API}/{project_id}/', proxies=self.proxies).json()
-        )
+        print("donde")
+        params = {
+            ':username': project['username'],
+            ':projectname': project['projectname'],  # Busca por nombre de proyecto
+      
+        }
+        session = requests.Session()
+
+        prepared_request = session.prepare_request(requests.Request('GET', consts.URL_SNAP_API, params=params))
+
+
+        print(prepared_request.url)
+        #url = f'{consts.URL_SNAP_API}/{project.get("username")}/{project.get("projectname")}'
+        #print(url)
+        #print("Esto es ", requests.get(consts.URL_SNAP_API, params=params, proxies=self.proxies))
+        
+        #response = requests.get(f'{consts.URL_SNAP_API}/metadata', params=params, proxies=self.proxies)   
+        #url = f'{consts.URL_SNAP_API}/:{project.get("username")}/:{project.get("projectname")}/metadata'  
+        #url = f'{consts.URL_SNAP_API}/{project.get("username")}/{project.get("projectname")}/metadata'  
+        url = f'{consts.URL_SNAP_API}/{project.get("username")}/{project.get("projectname")}'        
+      
+      
+        print(url)
+        response = requests.get(url, proxies=self.proxies)
+        print("solicitud", response)  
+ 
+        if response.status_code == 200:
+
+            if 'application/json' in response.headers['Content-Type']:
+                print("La respuesta  es un JSON válido")
+                html_content = response.json()
+
+                print(html_content)
+
+            else:
+
+                print("La respuesta no es un JSON válido")
+
+                #print(response.content)
+        return response.text
+            #print(f"Project Name: {response.id}")
+            #requests.get(consts.URL_SNAP_API, params=params, proxies=self.proxies).json()
+            #requests.get(f'{consts.URL_SNAP_API}/{project.get("projectname")}', proxies=self.proxies).json()
+        
+
+   

@@ -34,45 +34,48 @@ class DeadCode(Plugin):
     def analyze(self):
 
         sprites = {}
-
+        #print("prueba",self.json_project.items())
         for key, value in self.json_project.items():
-            if key == "targets":
-                for dicc in value:
-                    sprite = dicc["name"]
-                    blocks_list = []
-                    for _, blocks_dicc in dicc["blocks"].items():
-                        if type(blocks_dicc) is dict:
-                            event_var = any(blocks_dicc["opcode"] == event for event in consts.PLUGIN_DEADCODE_LIST_EVENT_VARS)
-                            loop_block = any(blocks_dicc["opcode"] == loop for loop in consts.PLUGIN_DEADCODE_LIST_LOOP_BLOCKS)
+            blocks_list = []
+            if "blocks" in value:
+                #print("valor", value)
+                
+                
+               
+                for blocks_dicc in value["blocks"]:
+                    #print(blocks_dicc)
+                    sprite = key
+                    if type(blocks_dicc) is dict:
+                        block_name = blocks_dicc["block"]
+                        next_blocks = blocks_dicc.get("next", [])
+                        #print("entras")
+                        event_var = any(blocks_dicc["block"] == event for event in consts.PLUGIN_DEADCODE_LIST_EVENT_VARS)
+                        loop_block = any(blocks_dicc["block"] == loop for loop in consts.PLUGIN_DEADCODE_LIST_LOOP_BLOCKS)
 
-                            if not event_var:
-                                if not self.opcode_argument_reporter in blocks_dicc["opcode"]:
-                                    if blocks_dicc.get("parent",) is None and blocks_dicc["next"] is None:
-                                        script = Script()
-                                        block = script.convert_block_to_text(blocks_dicc)
-                                        blocks_list.append(str(block))
-
+                        if event_var or loop_block:
+                            #print("entras2")
+                            if not self.opcode_argument_reporter in blocks_dicc["block"]:
+                                
+                                #print("entras3")
+                                if not next_blocks:
+                                    #print("entras4.2")
+                                    #print(blocks_dicc)
+                                    script = Script()
+                                    block = script.convert_block_to_text(blocks_dicc)
+                                    blocks_list.append(str(block))
+                                    #blocks_list.append(str(blocks_dicc.get("block")))
+                                
                                     # Check dead loop blocks
-                                    if loop_block and blocks_dicc["opcode"] not in blocks_list:
-                                        if not blocks_dicc["inputs"]:
-                                            # Empty loop block, but inside of a block structure
-                                            script = Script()
-                                            block = script.convert_block_to_text(blocks_dicc)
-                                            blocks_list.append(str(block))
-                                        elif "SUBSTACK" not in blocks_dicc["inputs"]:
-                                            script = Script()
-                                            block = script.convert_block_to_text(blocks_dicc)
-                                            blocks_list.append(str(block))
-                                        else: # Could be normal loop block
-                                            if blocks_dicc["inputs"]["SUBSTACK"][1] is None:
-                                                script = Script()
-                                                block = script.convert_block_to_text(blocks_dicc)
-                                                blocks_list.append(str(block))
-                    if blocks_list:
-                        scripts = []
-                        for block in blocks_list:
-                            sprites[sprite] = blocks_list
-                            self.dead_code_instances += 1
+                                    #print(loop_block)
+                                    #print(blocks_dicc)                 
+                                
+
+            if blocks_list:
+                scripts = []
+                for block in blocks_list:
+                    print( "bloque", block)
+                    sprites[sprite] = blocks_list
+                    self.dead_code_instances += 1
 
         self.dict_deadcode = sprites
 
@@ -91,7 +94,7 @@ class DeadCode(Plugin):
         self.dict_mastery['list_dead_code_scripts'] = [self.dict_deadcode]
 
         dict_result = {'plugin': 'dead_code', 'result': self.dict_mastery}
-
+        print("dict_result_dead",dict_result)
         return dict_result
 
 

@@ -23,6 +23,8 @@ ADD . /var/www/
 # Actualizar pip e instalar dependencias de Python
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install lxml
+
 
 # Asignar permisos de ejecución
 RUN chmod +x /var/www/app/certificate

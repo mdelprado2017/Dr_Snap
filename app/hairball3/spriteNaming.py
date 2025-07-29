@@ -1,5 +1,6 @@
 from app.hairball3.plugin import Plugin
 import app.consts_drscratch as consts
+import re
 
 
 class SpriteNaming(Plugin):
@@ -19,16 +20,15 @@ class SpriteNaming(Plugin):
 
         json_scratch_project = self.json_project.copy()
 
-        for key, value in json_scratch_project.items():
-            if key == "targets":
-                for dicc in value:
-                    for dicc_key, dicc_value in dicc.items():
-                        if dicc_key == "name":
-                            for default in consts.PLUGIN_SPRITENAMING_DEFAULT_NAMES:
-                                if default in dicc_value:
-                                    self.total_default += 1
-                                    self.list_default.append(dicc_value)
 
+       
+        for key, value in json_scratch_project.items():
+            for default in consts.PLUGIN_SPRITENAMING_DEFAULT_NAMES:
+                if default in key:
+                    self.total_default += 1
+                    self.list_default.append(key) 
+                #elif key.startswith("Sprite") and key.endswith(")"):             
+               
     def finalize(self):
 
         self.analyze()

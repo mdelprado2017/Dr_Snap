@@ -14,17 +14,10 @@ class BackdropNaming(Plugin):
 
     def analyze(self):
         for key, value in self.json_project.items():
-            if key == "targets":
-                for dicc in value:
-                    for dicc_key, dicc_value in dicc.items():
-                        if dicc_key == "costumes":
-                            for backdrop in dicc_value:
-                                for name_key, name_value in backdrop.items():
-                                    if name_key == "name":
-                                        for default in consts.PLUGIN_BACKDROPNAMING_DEFAULT_NAMES:
-                                            if default in name_value:
-                                                self.total_default += 1
-                                                self.list_default_names.append(name_value)
+            for default in consts.PLUGIN_BACKDROPNAMING_DEFAULT_NAMES:
+                if default in key:
+                    self.total_default += 1
+                    self.list_default_names.append(key)
 
     def finalize(self) -> str:
 
@@ -37,11 +30,6 @@ class BackdropNaming(Plugin):
             result += "\n"
 
         return result
-
-# def main(filename):
-#     naming = BackdropNaming()
-#     naming.analyze(filename)
-#     return naming.finalize()
 
 
 

@@ -3,7 +3,7 @@
 
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta name="description" content="Analyze your Scratch projects to assess your Computational Thinking skills">
+        <meta name="description" content="Analyze your Snap projects to assess your Computational Thinking skills">
         <meta name="keywords" content="Stamp, Startup, Multipurpose, Bootstrap, Landing page, Template, Registration, Landing">
         <meta name="author" content="Programamos URJC Libresoft FECyT">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -22,7 +22,7 @@
         <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 
         <!-- SITE TITLE -->
-        <title>Dr. Scratch</title>
+        <title>Dr. Snap</title>
 
 
         <link rel="stylesheet" href="/static/app/content/style.css">
@@ -85,7 +85,7 @@
         <script>
             $(document).ready(function() {
                 scratchblocks.renderMatching('pre.blocks', {
-                style:     'scratch3',   // Optional, defaults to 'scratch2'.
+                style:     'scratch2',   // Optional, defaults to 'scratch2'.
                 languages: ['en'], // Optional, defaults to ['en'].
                 scale: 0.5,                // Optional, defaults to 1
                 });
@@ -355,7 +355,7 @@
                     {% if dashboard_mode == "Recommender" %}
                         <div class="col-md-11">
                             <a href="/" style="padding-left: 8%;">
-                                <img src="static/app/images/logo_main.png" alt="" width="220" height="70.1667">
+                                <img src="/static/app/images/final.jpg" alt="" width="220" height="70.1667">
                             </a>
                         </div>
                         <div class="col-md-1">
@@ -396,7 +396,7 @@
                         
                     {% else %}
                         <a href="/" style="padding-left: 4%;">
-                            <img src="static/app/images/logo_main.png" alt="" width="220" height="70.1667">
+                            <img src="/static/app/images/final.jpg" alt="" width="220" height="70.1667">
                         </a>
                         <ul class="nav navbar-nav navbar-right login-register small-text">
                             <li style="display: block;" class="login dropdown">
@@ -445,20 +445,8 @@
     
             <!-- FOOTER -->
             <footer class="footer grey-bg text-center" style="min-width: 100%;">
-                <p>{% trans "©2024 Dr.Scratch Made with " %} <span style="color: #e25555;">&#9829;</span> {% trans "by " %} <a href="/collaborators">{% trans "Dr.Scratch Team." %}</a></p>
-                <!-- SOCIAL ICONS -->
-                <ul class="social-icons list-inline">
-                    <li class="list-inline-item">
-                        <a href="https://github.com/Daniesmor/Dr.Scratch-Northeastern">
-                            <i class="bi bi-github" style="color: black;"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/DrScratchTool">
-                            <i class="bi bi-twitter-x" style="color: black;"></i>
-                        </a>
-                    </li>
-                </ul>
+                <p>{% trans "©2024 Dr.Snap Made with " %} <span style="color: #e25555;">&#9829;</span> {% trans "by " %} <a href="/collaborators">{% trans "Miguel Del Prado." %}</a></p>
+               
             </footer>
         </div>
     

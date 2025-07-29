@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Analyze your Scratch projects to assess your Computational Thinking skills">
+    <meta name="description" content="Analyze your Snap projects to assess your Computational Thinking skills">
     <meta name="keywords" content="Stamp, Startup, Multipurpose, Bootstrap, Landing page, Template, Registration, Landing">
     <meta name="author" content="Programamos URJC Libresoft FECyT">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -19,7 +19,7 @@
 
 
     <!-- SITE TITLE -->
-    <title>Dr. Scratch</title>
+    <title>Dr. Snap</title>
 
 
     <link rel="stylesheet" href="/static/app/content/style.css">
@@ -141,7 +141,7 @@
         <div class="container">
             <!-- NAVIGATION LINK -->
             <a href="/" style="padding-left: 4%;">
-                <img src="static/app/images/logo_main.png" alt="" width="220" height="70.1667">
+                <img src="/static/app/images/final.jpg" alt="" width="220" height="70.1667">
             </a>
             <ul class="nav navbar-nav navbar-right login-register small-text">
                 <li style="display: block;" class="login dropdown">
@@ -188,12 +188,12 @@
         <div class="vertical-project-form">
             <h4>  {% trans "Do you want to analyze one project?" %}</h4>
 
-            <h5 class="dark-text form-heading"><strong>{% trans "There are three options to analyze your Scratch project now!" %}</strong></h5>
+            <h5 class="dark-text form-heading"><strong>{% trans "There are three options to analyze your Snap project now!" %}</strong></h5>
             <form name="form" id="form-personalized" class="project-form" enctype="multipart/form-data" method="post" action="/show_dashboard/">
 
                 <input type="hidden" name="dashboard_mode" value="Personalized">
-                {% trans "1. Introduce the <span class='colored-text'><a data-toggle='modal' href='#modalUrl'>url</a></span> of your Scratch project, you don't have to download it:" %}
-                {% trans '<input name="urlProject" id="cf-name" class="form-control input-box placeholder" placeholder="http:/scratch.mit.edu/projects/your_number" type="text">' %}
+                {% trans "1. Introduce the <span class='colored-text'><a data-toggle='modal' href='#modalUrl'>url</a></span> of your Snap project, you don't have to download it:" %}
+                {% trans '<input name="urlProject" id="cf-name" class="form-control input-box placeholder" placeholder="https://snap.berkeley.edu/project?username=&projectname=" type="text">' %}
                 <button id="url" name='_url' type="submit" class="btn btn-primary standard-button">{% trans "Analyze by url" %}</button>
                 {% csrf_token %}
                 <br><br>
@@ -202,14 +202,6 @@
                 {% trans "<input  name='zipFile' type='file' class='filestyle' data-buttonText='Choose Project'>" %}
                 <button id="upload" name='_upload' type="submit" class="btn btn-primary standard-button">{% trans "Analyze my project" %}</button>
                 <br></br>
-                {% trans "3. Upload a <span class='colored-text'><a data-toggle='modal' href='#modalTxt'>txt</a></span> containing the URLs of the projects, with each URL on a separate line. Or a <span class='colored-text'>zip</span> containing the .sb3" %}
-                {% trans "<input name='urlsFile' type='file' class='filestyle' data-buttonText='Choose txt or zip'>" %}
-                {% trans '<input name="batch-email" class="form-control input-box placeholder" placeholder="your@email.com" type="text">' %}
-                <p id="email-warning" style="display: none;"><span class='colored-text'>{% trans "Please enter an email!" %}</span></p>
-                <p id="txt-warning" style="display: none;"><span class='colored-text'>{% trans "Please upload a txt/zip file!" %}</span></p>
-                <button id="urls" name='_urls' type="submit" class="btn btn-primary standard-button">{% trans "Analyze my projects" %}</button>
-                <br></br>
-                {% csrf_token %}
                 
             </form>
                   
@@ -227,7 +219,7 @@
             {% endif %}
             {% if no_exists %}
             <br></br>
-            <p><span class="icon icon-close-alt2"></span> {% trans "Error! Your project doesn't exist in Scratch's servers" %}</p>
+            <p><span class="icon icon-close-alt2"></span> {% trans "Error! Your project doesn't exist in Snap's servers" %}</p>
             {% endif %}
         </div>
     </div>
@@ -246,7 +238,7 @@
                 <div class="small-text-medium uppercase colored-text">
                     {% trans "What is an url?" %}
                 </div>
-                <h4 class="modal-title"><strong>{% trans "How I can know my Scratch project's url?" %}</strong></h4>
+                <h4 class="modal-title"><strong>{% trans "How I can know my Snap project's url?" %}</strong></h4>
                 <div class="colored-line"></div>
             </div>
             <div class="modal-body">
@@ -267,9 +259,9 @@
         <div class="modal-header">
             <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
             <div class="small-text-medium uppercase colored-text">
-                {% trans "I want to download my project from Scratch!" %}
+                {% trans "I want to download my project from Snap!" %}
             </div>
-            <h4 class="modal-title"><strong>{% trans "How I can download my Scratch project to my computer?" %}</strong></h4>
+            <h4 class="modal-title"><strong>{% trans "How I can download my Snap project to my computer?" %}</strong></h4>
             <div class="colored-line"></div>
         </div>
         <div class="modal-body">
@@ -307,20 +299,7 @@
 
     <!-- FOOTER -->
     <footer class="footer grey-bg">
-        <p>{% trans "©2024 Dr.Scratch Made with " %} <span style="color: #e25555;">&#9829;</span> {% trans "by " %} <a href="/collaborators">{% trans "Dr.Scratch Team." %}</a></p>
-            <!-- SOCIAL ICONS -->
-            <ul class="social-icons">
-                <li>
-                    <a href="https://github.com/Daniesmor/Dr.Scratch-Northeastern"> 
-                    <i class="bi bi-github" style="color: black;"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://twitter.com/DrScratchTool">
-                    <i class="bi bi-twitter-x" style="color: black;"></i>
-                    </a>
-                </li>    
-            </ul>
+        <p>{% trans "©2024 Dr.Snap Made with " %} <span style="color: #e25555;">&#9829;</span> {% trans "by " %} <a href="/collaborators">{% trans "Miguel Del Prado." %}</a></p>
     </footer>
 </div>
 
@@ -334,7 +313,7 @@
                 </p>
         </div>
         <div class="container">
-            <img src="../../static/app/images/logo_main.png"/>
+            <img src="/static/app/images/final.jpg"/>
         </div>
         <div class = "container">
             <div class="progress progress-striped active">

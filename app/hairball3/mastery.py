@@ -18,23 +18,29 @@ class Mastery(Plugin):
 
     def process(self):
 
-        # print(self.json_project.items())
-
         for key, list_info in self.json_project.items():
-            if key == "targets":
-                for dict_target in list_info:
-                    for dicc_key, dicc_value in dict_target.items():
-                        if dicc_key == "blocks":
-                            for blocks, blocks_value in dicc_value.items():
-                                if type(blocks_value) is dict:
-                                    self.list_total_blocks.append(blocks_value)
-                                    self.dict_total_blocks[blocks] = blocks_value
+            #print("contraseña", key)
+            #print("contraseña", list_info)
 
+            for dicc_key, dicc_value in list_info.items():
+               
+                if dicc_key == "blocks":
+                    #print("dicc_value", dicc_value)
+                    for block_dicti in dicc_value:
+                        #print(block_dicti)
+                        if type(block_dicti) is dict:
+                            self.list_total_blocks.append(block_dicti)
+                            self.dict_total_blocks[block_dicti['block']] = block_dicti
+        
+        #print("total", list_total_blocks)
         for block in self.list_total_blocks:
             for key, list_info in block.items():
-                if key == "opcode":
+                if key == "block":
                     self.dict_blocks[list_info] += 1
                     self.total_blocks += 1
+        #print("noseeeee", self.dict_blocks)
+        #print("noseeeee", self.list_total_blocks)
+
 
     def analyze(self):
         self.compute_logic()
@@ -172,7 +178,7 @@ class Mastery(Plugin):
     def set_dimension_score(self, scale_dict, dimension):
 
         score = 0
-
+        print("Scale", scale_dict)
         for key, value in scale_dict.items():
             if type(value) == bool and value is True:
                 if key in self.possible_scores.keys():
@@ -199,13 +205,15 @@ class Mastery(Plugin):
         Assign the logic skill result
         """
 
-        basic = self.check_list({'control_if'})
-        developing = self.check_list({'control_if_else'})
-        master = self.check_list({'operator_and', 'operator_or', 'operator_not'})
+        basic = self.check_list({'doIf'})
+        developing = self.check_list({'doIfElse','reportIfElse'})
+        print("devreeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", developing)
+
+        proficient = self.check_list({'reportAnd','reportVariadicAnd' 'reportOr','reportVariadicOr', 'reportNot'})
         advanced = self.check_nested_conditionals()
         # finesse = PREGUNTAR GREGORIO
-
-        scale_dict = {"advanced": advanced, "master": master, "developing": developing, "basic": basic}
+        print("mastereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", proficient)
+        scale_dict = {"advanced": advanced, "proficient": proficient, "developing": developing, "basic": basic}
 
         self.set_dimension_score(scale_dict, "Logic")
         
@@ -216,9 +224,10 @@ class Mastery(Plugin):
         """
 
         basic = self.check_block_sequence()
-        developing = self.check_list({'control_repeat', 'control_forever'})
-        proficient = self.check_list({'control_repeat_until'})
+        developing = self.check_list({'doRepeat', 'doForever'})
+        proficient = self.check_list({'doUntil', 'for'})
         advanced = self.check_nested_loops()
+
         # finesse = PREGUNTAR GREGORIO
 
         scale_dict = {"advanced": advanced, "proficient": proficient, "developing": developing, "basic": basic}
@@ -231,9 +240,9 @@ class Mastery(Plugin):
         Compute the syncronization score
         """
 
-        basic = self.check_list({'control_wait'})
-        developing = self.check_list({'event_broadcast', 'event_whenbroadcastreceived', 'control_stop'})
-        proficient = self.check_list({'control_wait_until', 'event_whenbackdropswitchesto', 'event_broadcastandwait'})
+        basic = self.check_list({'doWait'})
+        developing = self.check_list({'doBroadcast', 'receiveMessage', 'doStopThis', 'doPauseAll'})
+        proficient = self.check_list({'doWaitUntil', 'doBroadcastAndWait', 'receiveOnClone', 'receiveCondition'})
         advanced = self.check_dynamic_msg_handling()
         # finesse = PREGUNTAR GREGORIO
 
@@ -248,7 +257,7 @@ class Mastery(Plugin):
         """
 
         basic = self.check_more_than_one()
-        developing = self.check_list({'control_start_as_clone'})
+        developing = self.check_list({'receiveOnClone'})
         proficient = self.check_list({'procedures_definition'})
         advanced = self.check_advanced_clones()
         print("ADVANCED CLONES:", advanced)
@@ -265,23 +274,23 @@ class Mastery(Plugin):
         """
 
         modifiers = self.check_list({
-            'motion_movesteps', 'motion_gotoxy', 'motion_glidesecstoxy', 'motion_setx', 'motion_sety',
-            'motion_changexby', 'motion_changeyby', 'motion_pointindirection', 'motion_pointtowards',
-            'motion_turnright', 'motion_turnleft', 'motion_goto', 'looks_changesizeby', 'looks_setsizeto',
-            'looks_switchcostumeto', 'looks_nextcostume', 'looks_changeeffectby', 'looks_seteffectto',
-            'looks_show', 'looks_hide', 'looks_switchbackdropto', 'looks_nextbackdrop'
+            'forward', 'gotoXY', 'doGlide', 'setXPosition', 'setYPosition',
+            'changeXPosition', 'changeYPosition', 'setHeading', 'doFaceTowards',
+            'turn', 'turnLeft', 'doGotoObject', 'changeScale', 'setScale',
+            'doSwitchToCostume', 'doWearNextCostume', 'changeEffect', 'setEffect',
+            'show', 'hide'
         })
 
         lists = self.check_list({
-            'data_lengthoflist', 'data_showlist', 'data_insertatlist', 'data_deleteoflist', 'data_addtolist',
-            'data_replaceitemoflist', 'data_listcontainsitem', 'data_hidelist', 'data_itemoflist'
+            'reportListAttribute',  'doInsertInList', 'doDeleteFromList', 'doAddToList',
+            'doReplaceInList', 'reportListContainsItem'
         })
         
         boolean_logic = self.check_list({
-            'operator_equals', 'operator_gt', 'operator_and', 'operator_or', 'operator_not', 'operator_lt',
+            'reportVariadicEquals', 'reportVariadicLessThan', 'reportVariadicAnd', 'reportVariadicOr', 'reportNot', 'reportVariadicGreaterThan',
         })
         
-        variables = self.check_list({'data_changevariableby', 'data_setvariableto'})
+        variables = self.check_list({'doChangeVar', 'doSetVar'})
         
         scale_dict = {"advanced": boolean_logic, "proficient": lists, "developing": variables, "basic": modifiers}
         
@@ -296,15 +305,14 @@ class Mastery(Plugin):
 
         # ----------- PROFIENCY --------------
         proficient = self.check_ui_proficiency()
-        
+
         # ---------- DEVELOPING ------------------------
         developing = self.check_ui_developing()
-        
+
         # ----------- BASIC -------------------------------------
-        basic = self.check_list({'event_whenflagclicked'})
+        basic = self.check_list({'receiveGo', 'receiveKey'})
 
         scale_dict = {"advanced": advanced, "proficient": proficient, "developing": developing, "basic": basic}
-
         self.set_dimension_score(scale_dict, "UserInteractivity")
     
     def check_ui_advanced(self):
@@ -325,37 +333,56 @@ class Mastery(Plugin):
         """
         Assign the Parallelism skill result
         """
+        print("fin, principio")
 
         dict_parall = self.parallelization_dict()
-
+        print("fiio")
         # ---------- ADVANCED ----------------------------
         advanced = self.check_p_advanced(dict_parall)
-
+        print("fin")
         # ---------- PROFICIENT ----------------------------
         proficient = self.check_p_proficiency(dict_parall)
-
+        print("fya")
         # ---------- DEVELOPING ----------------------------     
         developing = self.check_p_developing(dict_parall)
-        
+        print("f")
         # ----------- BASIC ----------------------------
         basic = self.check_scripts_flag(n_scripts=2)
-        
+        print("fin, principio")
         scale_dict = {"advanced": advanced, "proficient": proficient, "developing": developing, "basic": basic}
+        print("final")
 
         self.set_dimension_score(scale_dict, "Parallelization")
     
     def parallelization_dict(self):
         dict_parallelization = {}
-
+        
+        print(self.list_total_blocks)
         for block in self.list_total_blocks:
             for key, value in block.items():
-                if key == 'fields':
-                    for key_pressed, val_pressed in value.items():
-                        if key_pressed in dict_parallelization:
-                            dict_parallelization[key_pressed].append(val_pressed[0])
+                
+                # Asegurar que las claves existen antes de hacer append
+                if key == 'option':  
+                    if 'BROADCAST_OPTION' not in dict_parallelization:
+                        dict_parallelization['BROADCAST_OPTION'] = []  # Inicializar como lista vacía
+                    dict_parallelization['BROADCAST_OPTION'].append(value)
+        print("---------------------------------------------")
+        for key, list_info in self.json_project.items():
+        #print("contraseña", key)
+        #print("contraseña", list_info)
+            for dicc_key, dicc_value in list_info.items():
+                
+                if dicc_key == "costumes":
+                        if 'BACKDROP' not in dict_parallelization:
+                            dict_parallelization['BACKDROP'] = []  # Inicializar como lista vacía
+                        # Si dicc_value es una lista, añadimos cada valor de esa lista a dict_parallelization['BACKDROP']
+                        if isinstance(dicc_value, list):
+                            dict_parallelization['BACKDROP'].extend(dicc_value)  # extend agrega los elementos de dicc_value a BACKDROP
                         else:
-                            dict_parallelization[key_pressed] = val_pressed
-
+                            dict_parallelization['BACKDROP'].append(dicc_value)  
+                                
+        
+        print("noseee",dict_parallelization)
         return dict_parallelization
         
         
@@ -363,14 +390,12 @@ class Mastery(Plugin):
         """
         Assign the Use of Math Operators skill result
         """
-
-        basic = self.check_list({'operator_add', 'operator_subtract', 'operator_multiply', 'operator_divide'})
+        basic = self.check_list({'reportVariadicSum', 'reportDifference', 'reportVariadicProduct', 'reportQuotient'})
         developing = self.check_formula()
-        proficient = self.check_list({'operator_join', 'operator_letter_of', 'operator_length', 'operator_contains'})
+        proficient = self.check_list({'reportJoinWords', 'reportLetter', 'reportTextAttribute'})
         advanced = self.check_trigonometry()
 
         scale_dict = {"advanced": advanced, "proficient": proficient, "developing": developing, "basic": basic}
-
         self.set_dimension_score(scale_dict, "MathOperators")
 
     def compute_motion_operators(self):
@@ -378,9 +403,10 @@ class Mastery(Plugin):
         Assign the Use of Motion Operators skill result
         """
 
-        basic = self.check_list({'motion_movesteps', 'motion_gotoxy', 'motion_changexby', 'motion_goto', 'motion_changeyby', 'motion_setx', 'motion_sety'})
-        developing = self.check_list({'motion_turnleft', 'motion_turnright', 'motion_setrotationstyles', 'motion_pointindirection', 'motion_pointtowards'})
-        proficient = self.check_list({'motion_glideto', 'motion_glidesecstoxy', 'motion_changexby','motion_changeyby'})
+        basic = self.check_list({'forward', 'gotoXY', 'changeXPosition', 'doGotoObject', 'changeYPosition', 'setXPosition', 'setYPosition'})
+        developing = self.check_list({'turnLeft', 'turn', 'setHeading', 'doFaceTowards'})
+        proficient = self.check_list({'doGlide', 'changeXPosition','changeYPosition'})
+        print("-----------------adddddddddddddddd")
         advanced = self.check_motion_complex_sequences()
         # finesse = PREGUNTAR GREGORIO
 
@@ -394,15 +420,16 @@ class Mastery(Plugin):
         Checks if the script contains a base operator with 3 or more nested operators within its inputs.
         """
 
-        operators = ['operator_add', 'operator_subtract', 'operator_multiply',
-                    'operator_divide', 'operator_mathop', 'operator_random']
+        operators = ['reportVariadicSum', 'reportDifference', 'reportVariadicProduct',
+                    'reportQuotient', 'operator_mathop', 'operator_random']
+
 
         # Iterate over all blocks to find base operators
         for block in self.list_total_blocks:
-            if block['opcode'] in operators:
+            if block['block'] in operators:
                 # Count the nested operators within this base operator
                 counter = self.count_nested_operators(block, operators)
-                print(f"Nested operators for block {block['opcode']}: {counter}")
+                print(f"Nested operators for block {block['block']}: {counter}")
                 
                 # If we find 1 or more nested operators, return True
                 if counter >= 1:
@@ -415,34 +442,34 @@ class Mastery(Plugin):
         """
         
         count = 0 
-        
-        for _, value in block['inputs'].items():
-            # Check if there is a string representing a block ID
-            block_ids = [v for v in value if isinstance(v, str) and v in self.dict_total_blocks]
+        for b, value in block.items():
+            if( b == "block"):
+                # Check if there is a string representing a block ID
+                block_ids = [v for v in value if isinstance(v, str) and v in self.dict_total_blocks]
+               
+
+                for connected_block_id in block_ids:
+                    connected_block = self.dict_total_blocks[connected_block_id]
+                    
+                    # If the connected block is an operator, count that operator and keep searching
+                    if connected_block['block'] in operators:
+
+                        count += 1
+                        # Recursively count operators within this operator
+                        count += self.count_nested_operators(connected_block, operators)
             
-            for connected_block_id in block_ids:
-                connected_block = self.dict_total_blocks[connected_block_id]
-                
-                # If the connected block is an operator, count that operator and keep searching
-                if connected_block['opcode'] in operators:
-                    count += 1
-                    # Recursively count operators within this operator
-                    count += self.count_nested_operators(connected_block, operators)
-        
         return count
 
     def check_scripts_flag(self, n_scripts):
-        if self.dict_blocks['event_whenflagclicked'] >= n_scripts:  # N Scripts on green flag
+        if self.dict_blocks['receiveGo'] >= n_scripts:  # N Scripts on green flag
             return True
         return False
 
     def check_scripts_key(self, dict_parall, n_scripts):
-        if self.dict_blocks['event_whenkeypressed'] >= n_scripts:  # N Scripts start on the same key pressed
-            if dict_parall['KEY_OPTION']:
-                var_list = set(dict_parall['KEY_OPTION'])
-                for var in var_list:
-                    if dict_parall['KEY_OPTION'].count(var) >= n_scripts:
-                        return True
+        if self.dict_blocks['receiveMessage'] >= n_scripts:  # N Scripts start on the same key pressed
+            return True
+           
+
         return False
     
     def check_scripts_sprite(self, n_scripts):
@@ -461,57 +488,74 @@ class Mastery(Plugin):
     def check_scripts(self, n_scripts):
         coincidences = 0
         for block in self.dict_total_blocks.values(): 
-            
-            if block['opcode'] == 'control_if':
-                condition = block['inputs'].get('CONDITION', None)
+            #deberia de ser con next
+            if block['block'] == 'doif':
+                condition = block['next']
                 if (condition != None):
-                    id_condition = condition[1]
-                    
-                    if id_condition != None:
-                        if self.dict_total_blocks[id_condition]['opcode'] == 'operator_gt':
-                            coincidences += 1
-                            if coincidences >= n_scripts: # N scripts when %s is > %s,
-                                return True
+                    for hijo in self.dict_total_blocks.values():
+                        if hijo['id'] == condition:
+                           
+                            if hijo['block'] == 'operator_greaterThan' or hijo['block'] == 'reportVariadicGreaterThan':
+                                coincidences += 1
+                                if coincidences >= n_scripts: # N scripts when %s is > %s,
+                                    print("check_scripts t")
+                                    return True
+        print("check_scripts f")
         return False
 
     def check_scripts_media(self, dict_parall, n_scripts):
-        if self.dict_blocks['event_whengreaterthan'] >= n_scripts:  # N Scripts start on the same multimedia (audio, timer) event
+        print("PARALL", dict_parall)
+        if self.dict_blocks['whenGreaterThan'] >= n_scripts:  # N Scripts start on the same multimedia (audio, timer) event
             if dict_parall['WHENGREATERTHANMENU']:
                 var_list = set(dict_parall['WHENGREATERTHANMENU'])
                 for var in var_list:
                     if dict_parall['WHENGREATERTHANMENU'].count(var) >= n_scripts:
+                        print("check_scripts_media t")
                         return True
+        print("check_scripts_media f")
         return False
     
     def check_scripts_backdrop(self, dict_parall, n_scripts):
-        if self.dict_blocks['event_whenbackdropswitchesto'] >= n_scripts:  # N Scripts start on the same backdrop change
-            if dict_parall['BACKDROP']:
-                backdrop_list = set(dict_parall['BACKDROP'])
-                for var in backdrop_list:
-                    if dict_parall['BACKDROP'].count(var) >= n_scripts:
-                        return True
+        if dict_parall['BACKDROP']:
+            backdrop_list = set(dict_parall['BACKDROP'])
+            for var in backdrop_list:
+                if dict_parall['BACKDROP'].count(var) >= n_scripts:
+                    print("check_scripts_backdrop t")
+
+                    return True
+        print("check_scripts_backdrop f")
         return False
     
     def check_scripts_msg(self, dict_parall, n_scripts):
-        if self.dict_blocks['event_whenbroadcastreceived'] >= n_scripts:  # N Scripts start on the same received message
-            if dict_parall['BROADCAST_OPTION']:
-                var_list = set(dict_parall['BROADCAST_OPTION'])
-                for var in var_list:
-                    if dict_parall['BROADCAST_OPTION'].count(var) >= n_scripts:
-                        return True
-        return False
+        try:
+            print("check_scripts_msg 1")
+            if self.dict_blocks['receiveMessage'] >= n_scripts:  # N Scripts start on the same received message
+                print("check_scripts_msg 2")
+                if dict_parall['BROADCAST_OPTION']:
+                    print("check_scripts_msg 3")
+                    var_list = set(dict_parall['BROADCAST_OPTION'])
+                    for var in var_list:
+                        print(dict_parall['BROADCAST_OPTION'].count(var))
+                        print(n_scripts)
+                        if dict_parall['BROADCAST_OPTION'].count(var) >= n_scripts:
+                            return True
+            print("check_scripts_msg f")
+            return False
+        except Exception as e:
+            print(f"Error in check_scripts_msg: {e}")
     
     def check_scripts_video(self, n_scripts):
-        if self.dict_blocks['videoSensing_whenMotionGreaterThan'] >= n_scripts:  # N Scripts start on the same multimedia (video) event
-            return True
+        if self.dict_blocks['videoSensing_motionGreaterThan'] >= n_scripts:  # N Scripts start on the same multimedia (video) event
+            return True        
+        print("check_scripts_video f")
         return False
     
     def check_ui_proficiency(self):
         """
         Check if the user has proficient user interactivity
         """
-        proficiency = {'videoSensing_videoToggle', 'videoSensing_videoOn', 'videoSensing_whenMotionGreaterThan',
-                       'videoSensing_setVideoTransparency', 'sensing_loudness'}
+        proficiency = {'videoSensing_motionGreaterThan', 'reportVideo', 'doSetVideoTransparency',
+                       'reportAudio', 'reportTouchingColor'}
         
         if self.check_list(proficiency) or self.check_scripts(n_scripts=2):
             return True
@@ -528,8 +572,8 @@ class Mastery(Plugin):
         """
         Check if the user has developing user interactivity
         """
-        developing = {'event_whenkeypressed', 'event_whenthisspriteclicked', 'sensing_mousedown', 'sensing_keypressed',
-                      'sensing_askandwait', 'sensing_answer'}
+        developing = {'receiveKey',  'reportMouseDown', 'reportKeyPressed',
+                      'doAsk', 'getLastAnswer'}
 
         if self.check_list(developing) or self.check_mouse_blocks():
             return True
@@ -541,15 +585,18 @@ class Mastery(Plugin):
         """
         Check the advanced parallelization skills
         """
+        print("llego ADVANCED")
         if (self.check_scripts(n_scripts=3) or self.check_scripts_media(dict_parall, n_scripts=3) or self.check_scripts_backdrop(dict_parall, n_scripts=3) 
             or self.check_scripts_msg(dict_parall, n_scripts=3) or self.check_scripts_video(n_scripts=3)):
+            print("t")
             return True
+        print("f")
         return False
         
     
     def check_p_proficiency(self, dict_parall):
         if (self.check_scripts(n_scripts=2) or self.check_scripts_media(dict_parall, n_scripts=2) or self.check_scripts_backdrop(dict_parall, n_scripts=2) 
-            or self.check_list({'control_create_clone_of'}) or self.check_scripts_msg(dict_parall, n_scripts=2) or self.check_scripts_video(n_scripts=2)):
+            or self.check_list({'createClone'}) or self.check_scripts_msg(dict_parall, n_scripts=2) or self.check_scripts_video(n_scripts=2)):
             return True
         return False
     
@@ -564,9 +611,11 @@ class Mastery(Plugin):
 
         count = 0
         for block in self.list_total_blocks:
-            for key, value in block.items():
-                if key == "parent" and value is None:
-                    count += 1
+            block_id = str(block.get("id", ""))  # Convertimos el id a string para analizarlo
+        
+            # Verificamos que el id es un número entero (sin ".") y que no tenga "next"
+            if block_id.isdigit() and "next" not in block:
+                count += 1
         if count > 1:
             check = True
 
@@ -575,118 +624,91 @@ class Mastery(Plugin):
     def check_advanced_clones(self):
 
         check = False
-
+        #print("check_advanced_clones")
         for block in self.list_total_blocks:
-            if block['opcode'] == "control_start_as_clone":
-                next = self.dict_total_blocks.get(block['next'])
-                while next is not None:
-                    if self.check_broadcast(next) or self.check_loops(next) or self.check_conditional(next):
-                        check = True
-                        return check
-                    next = self.dict_total_blocks.get(next['next']) 
+            if block['block'] == "receiveOnClone":
+
+                next = block['id']
+                
+                current_id = str(next)  # Convertimos msg en cadena para evitar errores
+                if '.' in current_id:
+                    current_parts = current_id.split('.')  # Dividimos el ID por puntos (ej. '1.1' -> ['1', '1'])
+                    # Vamos a buscar los siguientes bloques incrementando la última parte del ID
+                    next_part = int(current_parts[-1]) + 1  # Incrementamos la última parte
+                    current_parts[-1] = str(next_part)  # Reemplazamos la última parte con el nuevo valor
+                    # Ahora construimos el siguiente ID
+                    parent_id = '.'.join(current_parts)  # Convertimos la lista de nuevo en un ID
+                else:
+                    parent_id = str(int(current_id) + 1)
+
+                if self.check_broadcast(parent_id) or self.check_loops(parent_id) or self.check_conditional(parent_id):
+                    check = True
+                    return check
 
         return check
     
-    def check_broadcast(self, block):
+    def check_broadcast(self, parent_id):
 
         check = False
 
-        list = {'event_broadcast', 'event_broadcastandwait'}
+        list = {'doBroadcast', 'doBroadcastAndWait'}
+        for substack in self.list_total_blocks:
+            if str(substack['id']) == parent_id:
+                parent_block = substack['block']  # Asignamos el bloque padre
+                # Si encontramos el bloque
+                #print(f"Bloque encontrado: {parent_block} con ID: {parent_id}")
 
-        if block['opcode'] in list:
+                break
+
+        if parent_block in list:
             check = True
-        
+        #print("no fallo")
         return check
     
-    def check_loops(self, block):
+    def check_loops(self, parent_id):
 
-        loops = {'control_forever', 'control_repeat', 'control_repeat_until'}
+        loops = {'doForever', 'doRepeat', 'doUntil'}
 
-        def process_block(block, loops):
-            """Función recursiva que añade cada bloque único al set."""
 
-            if block is None:
-                return
+        check = False
+        for substack in self.list_total_blocks:
+           
+            if str(substack['id']) == str(parent_id):
+                parent_block = substack['block']  # Asignamos el bloque padre
+                # Si encontramos el bloque
+                #print(f"Bloque encontrado LOOPS: {parent_block} con ID: {parent_id}")
+
+                break
+       
+        for loop in loops:
+            if loop == parent_block:   
+                    check = True
             
-            # Si el bloque ya ha sido procesado, no lo añadimos de nuevo
-            block_id = block.get('opcode')  # Suponiendo que cada bloque tiene un identificador único
-            if block_id in visited_blocks:
-                return
+        return check
 
-            # Añade el bloque actual al set de bloques visitados
-            visited_blocks.add(block_id)
-
-            # Procesa bucles
-            if block['opcode'] in loops:
-                # Procesa los bloques dentro del bucle
-                next_block = self.dict_total_blocks.get(block['inputs']['SUBSTACK'][1])
-                while next_block is not None:
-                    process_block(next_block, loops)  # Llamada recursiva para procesar bloques anidados
-                    next_block = self.dict_total_blocks.get(next_block.get('next'))
-
-            # Procesa condicionales (control_if_else y control_if)
-            elif block['opcode'] == 'control_if_else':
-                # Procesa SUBSTACK primero
-                next_block = self.dict_total_blocks.get(block['inputs']['SUBSTACK'][1])
-                while next_block is not None:
-                    process_block(next_block, loops)
-                    next_block = self.dict_total_blocks.get(next_block.get('next'))
-
-                # Luego procesa SUBSTACK2
-                next_block = self.dict_total_blocks.get(block['inputs'].get('SUBSTACK2', [None])[1])
-                while next_block is not None:
-                    process_block(next_block, loops)
-                    next_block = self.dict_total_blocks.get(next_block.get('next'))
-
-            elif block['opcode'] == 'control_if':
-                # Procesa solo SUBSTACK
-                next_block = self.dict_total_blocks.get(block['inputs']['SUBSTACK'][1])
-                while next_block is not None:
-                    process_block(next_block, loops)
-                    next_block = self.dict_total_blocks.get(next_block.get('next'))
-
-            else:
-                # Procesa el siguiente bloque si no es un condicional o bucle
-                next_block = self.dict_total_blocks.get(block.get('next'))
-                while next_block is not None:
-                    process_block(next_block, loops)
-                    next_block = self.dict_total_blocks.get(next_block.get('next'))
-
-        # Comienza el procesamiento del bloque principal
-        visited_blocks = set()  # Creamos un conjunto vacío para guardar los bloques únicos
-        min_blocks = 3
-
-        if block['opcode'] in loops:
-            try:
-                process_block(block, loops)
-                total_blocks = len(visited_blocks)  # Contamos los bloques únicos
-                print(f"Total unique blocks processed: {total_blocks}")
-                if total_blocks >= min_blocks:
-                    return True
-            except KeyError:
-                pass
         
-        return False
 
 
     
-    def check_conditional(self, block):
+    def check_conditional(self, parent_id):
 
         check = False
+        for substack in self.list_total_blocks:  
 
-        if block['opcode'] == 'control_if':
-            try:
-                self.dict_total_blocks.get(block['inputs']['SUBSTACK'][1])
+            if str(substack['id']) == str(parent_id):
+                parent_block = substack['block']  # Asignamos el bloque padre
+                # Si encontramos el bloque
+                #print(f"Bloque encontrado CONDICIONAL: {parent_block} con ID: {parent_id}")
+
+                break
+       
+    
+        if parent_block == 'doIf':
                 check = True
-            except KeyError:
-                pass
-        elif block['opcode'] == 'control_if_else':
-            try:
-                self.dict_total_blocks.get(block['inputs']['SUBSTACK'][1])
-                self.dict_total_blocks.get(block['inputs']['SUBSTACK2'][1])
+           
+        elif parent_block == 'doIfElse':
                 check = True
-            except KeyError:
-                pass
+            
 
         return check
 
@@ -708,15 +730,14 @@ class Mastery(Plugin):
 
         check = False
 
-        list = {'cos', 'sin', 'tan', 'asin', 'acos', 'atan'}
+        list = {'cos', 'sin', 'tan', 'asin', 'acos', 'atan', 'atan2'}
 
         for block in self.list_total_blocks:
-            if block['opcode'] == 'operator_mathop':
-                for element in block['fields']['OPERATOR']:
-                    if element in list:
-                        check = True
-                        return check
-                    
+            if(block['block'] == 'reportMonadic'):
+                if block['option'] in list:
+                    check = True
+                    return check
+                
         return check
 
     
@@ -725,21 +746,24 @@ class Mastery(Plugin):
         check = False
         min_motion_blocks = 5
         counter = 0
-        list = {'motion_movesteps', 'motion_gotoxy', 'motion_glidesecstoxy', 'motion_glideto', 
-                'motion_setx', 'motion_sety', 'motion_changexby', 'motion_changeyby', 
-                'motion_pointindirection', 'motion_pointtowards', 'motion_turnright', 'motion_turnleft', 
-                'motion_goto', 'motion_ifonedgebounce', 'motion_setrotationstyles'}
+        list = {'forward', 'gotoXY', 'doGlide',
+                'setXPosition', 'setYPosition', 'changeXPosition', 'changeYPosition', 
+                'setHeading', 'doFaceTowards', 'turn', 'turnLeft', 
+                'doGotoObject', 'bounceOffEdge'}
+                           
         
-        
-        for _,value in self.dict_total_blocks.items():
-            if value.get('parent') is None:
-                counter = 0
-            else:
-                if value.get('opcode') in list:
+       
+        for item in list:
+            for block in self.list_total_blocks:
+                
+            
+                if block['block'] == item:
                     counter += 1
+                    #print(counter)
                     if counter >= min_motion_blocks:
                         check = True
                         return check
+
 
         return check
     
@@ -751,11 +775,16 @@ class Mastery(Plugin):
         min_msg = 3
 
         for block in self.list_total_blocks:
-            if block.get('opcode') == "event_broadcast" or block.get('opcode') == "event_broadcastandwait":
+            if block.get('block') == "doBroadcast" or block.get('block') == "doBroadcastAndWait" :
                 try:
-                    msg = block['inputs']['BROADCAST_INPUT'][1][2]
+                    #("-------------dynamic---------------")
+                    #print(block['block'])
+                    msg = block['id']
+                    #print(msg)
+                   
                     if self.has_conditional_or_loop(msg):
                         counter += 1
+                        #print("Counter", counter)
                 except IndexError:  
                     pass
         if counter >= min_msg:
@@ -766,16 +795,36 @@ class Mastery(Plugin):
     def has_conditional_or_loop(self, msg):
 
         check = False
+        current_id = str(msg)  # Convertimos msg en cadena para evitar errores
 
+        if '.' in current_id:
+            current_parts = current_id.split('.')  # Dividimos el ID por puntos (ej. '1.1' -> ['1', '1'])
+            # Vamos a buscar los siguientes bloques incrementando la última parte del ID
+            next_part = int(current_parts[-1]) + 1  # Incrementamos la última parte
+            current_parts[-1] = str(next_part)  # Reemplazamos la última parte con el nuevo valor
+            # Ahora construimos el siguiente ID
+            parent_id = '.'.join(current_parts)  # Convertimos la lista de nuevo en un ID
+            #print(msg)
+        else:
+            parent_id = str(int(current_id) + 1)
+
+        for substack in self.list_total_blocks:
+
+            if str(substack['id']) == parent_id:
+                parent_block = substack['block']  # Asignamos el bloque padre
+                # Si encontramos el bloque
+                #print(f"Bloque encontrado GENERAL: {parent_block} con ID: {parent_id}")
+
+                break
+       
         for block in self.list_total_blocks:
-            if block.get('opcode') == 'event_whenbroadcastreceived' and block['fields']['BROADCAST_OPTION'][1] == msg:
-                next = self.dict_total_blocks.get(block['next'])
-                while next is not None:
-                    if self.check_conditional(next) or self.check_loops(next):
+            if(str(block.get('id')) == str(parent_id)):
+                    if self.check_conditional(parent_id) or self.check_loops(parent_id):
                         check = True
                         return check
-                    next = self.dict_total_blocks.get(next['next']) 
 
+
+       
         return check
     
     
@@ -785,109 +834,184 @@ class Mastery(Plugin):
         """
 
         check = False
-
-        for _, block_dict in self.dict_total_blocks.items():
-            if block_dict.get('opcode') == 'control_if':
+        print("------------------------sghgshs------------------")
+        print(json.dumps(self.list_total_blocks))
+        
+        for block in self.list_total_blocks:
+            if block['block'] == 'doIf' or block['block'] == 'doIfElse':
                 try:
-                    substack =  self.dict_total_blocks.get(block_dict['inputs']['SUBSTACK'][1])
-                    if self.has_nested_conditional(substack):
-                        check = True
-                        break
+                    print("-----------------------logica---------------------------------------------------------")
+
+                    for block_id in block['next']:  # Iterar sobre cada ID en next
+                        print("block_id", block_id)
+                        if self.has_nested_conditional(block_id):
+                            check = True
+                            break
                 except KeyError:
                     pass
-            elif block_dict.get('opcode') == 'control_if_else':
-                try:
-                    substack =  self.dict_total_blocks.get(block_dict['inputs']['SUBSTACK'][1])
-                    substack_2 = self.dict_total_blocks.get(block_dict['inputs']['SUBSTACK2'][1])
-                    if self.has_nested_conditional(substack) or self.has_nested_conditional(substack_2):
-                        check = True
-                        break
-                except KeyError:
-                    pass 
+
                 
-        return check
+        return check    
     
     
-    def has_nested_conditional(self, substack):
+    def has_nested_conditional(self, parent_id):
         """
         Returns True if there is a nested conditional
         """
+        #print("---------------------------------------------")
+        loops = {'doForever', 'doRepeat', 'doUntil'}
+        conditionals = {'doIf', 'doIfElse'}
 
-        loops = {'control_forever', 'control_repeat', 'control_repeat_until'}
+        #print(f"Starting check for nested if from parent_id: {parent_id}")
 
-        while substack is not None:
-            if substack.get('opcode') == 'control_if' or substack.get('opcode') == 'control_if_else':
-                return True
-            elif substack.get('opcode') in loops:
-                try:
-                    loop_substack = self.dict_total_blocks.get(substack['inputs']['SUBSTACK'][1])
-                    if self.has_nested_conditional(loop_substack):
-                        return True
-                except KeyError:
-                    pass
-            substack = self.dict_total_blocks.get(substack['next'])
+        # Verifica la estructura de list_total_blocks
+        #print(self.list_total_blocks)  # Para asegurarte de la estructura
+
+        parent_block = None  # Inicializamos el bloque padre
+        for substack in self.list_total_blocks:
+            if substack['id'] == parent_id:
+                
+                parent_block = substack['block']  # Asignamos el bloque padre
+                print("padre", parent_block)
+
+                # Si encontramos el bloque
+                #print(f"Bloque encontrado: {parent_block} con ID: {parent_id}")
+
+                break
+       
+        
+      
+
+        # Si es una condición, verificamos los sub-bloques (si los tiene)
+        if parent_block in conditionals:
+            #(f"Se encontró una condición")
+            return True
+               
+        else: #Si no encuentra un if o else debemos de mirar el 1.1.2
+            #print(f"No es un bucle ni una condición. Verificando el siguiente bloque en la jerarquía.")
+            current_id = parent_id
+            current_parts = current_id.split('.')  # Dividimos el ID por puntos (ej. '1.1' -> ['1', '1'])
+
+            # Vamos a buscar los siguientes bloques incrementando la última parte del ID
+            next_part = int(current_parts[-1]) + 1  # Incrementamos la última parte
+            current_parts[-1] = str(next_part)  # Reemplazamos la última parte con el nuevo valor
+
+            # Ahora construimos el siguiente ID
+            next_id = '.'.join(current_parts)  # Convertimos la lista de nuevo en un ID
+            # Verificamos si el siguiente bloque existe y lo procesamos
+            next_block = next((block for block in self.list_total_blocks if block["id"] == next_id), None)
+
+            #print(next_block)
+            if next_block:
+                #print(f"Verificando siguiente bloque con ID: {next_id}")
+                if self.has_nested_conditional(next_block['id']):
+                    return True
+
 
         return False
+
     
     
     def check_block_sequence(self):
 
         check = False
+        i=0
+        for block_dict in self.list_total_blocks:
+            i+=1
 
-        for _, block_dict in self.dict_total_blocks.items():
-            if block_dict['next'] is not None:
+            if i == self.total_blocks:
                 check = True
                 break
 
         return check
 
-    
     def check_nested_loops(self):
         """
-        Finds if there are any nested conditionals in all the blocks of the script.
+        Finds if there are any nested loops in all the blocks of the script based on block IDs.
         """
 
         check = False
-
-        for _, block_dict in self.dict_total_blocks.items():
-            if block_dict['opcode'] == 'control_forever' or block_dict['opcode'] == 'control_repeat' or block_dict['opcode'] == 'control_repeat_until':
+        for block in self.list_total_blocks:
+           
+            if block['block'] in {'doForever', 'doRepeat', 'doUntil'}:  # Si es un bucle
                 try:
-                    substack =  self.dict_total_blocks.get(block_dict['inputs']['SUBSTACK'][1])
-                    if self.has_nested_loops(substack):
-                        check = True
-                        break
+                    # Obtener el ID del bloque
+
+                    for block_id in block['next']:  # Iterar sobre cada ID en next
+                        print("--------------------------------------------------------------------------------")
+                  
+                        if self.has_nested_loops(block_id):  # Verificar si hay bucles anidados basado en ID
+                            check = True
+                            break
                 except KeyError:
                     pass
-                
+
         return check
-    
-    def has_nested_loops(self, substack):
-        """
-        Returns True if there is a nested conditional
-        """
 
-        loops = {'control_forever', 'control_repeat', 'control_repeat_until'}
 
-        while substack is not None:
-            if substack['opcode'] in loops:
-                return True
-            if substack['opcode'] == 'control_if':
-                try:
-                    substack_if = self.dict_total_blocks.get(substack['inputs']['SUBSTACK'][1])
-                    if self.has_nested_loops(substack_if):
-                        return True
-                except KeyError:
-                    pass
-            elif substack['opcode'] == 'control_if_else':
-                try:
-                    substack_if = self.dict_total_blocks.get(substack['inputs']['SUBSTACK'][1])
-                    substack_if_else = self.dict_total_blocks.get(substack['inputs']['SUBSTACK2'][1])
-                    if self.has_nested_loops(substack_if):
-                        return True
-                    elif self.has_nested_loops(substack_if_else):
-                        return True
-                except KeyError:
-                    pass
-            substack = self.dict_total_blocks.get(substack['next'])
+    def has_nested_loops(self, parent_id):
+        """
+        Recursively checks if there are nested loops or conditionals starting from the parent block ID.
+        """
+        loops = {'doForever', 'doRepeat', 'doUntil'}
+        conditionals = {'doIf', 'doIfElse'}
+        
+        #print(f"Starting check for nested loops from parent_id: {parent_id}")
+
+        # Verifica la estructura de list_total_blocks
+        #print(self.list_total_blocks)  # Para asegurarte de la estructura
+
+        parent_block = None  # Inicializamos el bloque padre
+        for substack in self.list_total_blocks:
+            #print(f"Verificando substack: {substack}")  # Imprime cada substack en la lista
+            
+            #print(parent_id)
+            #print(substack['id'])
+            if substack['id'] == parent_id:
+                #print("Bloque encontrado")
+                parent_block = substack['block']  # Asignamos el bloque padre
+                # Si encontramos el bloque
+                #print(f"Bloque encontrado: {parent_block} con ID: {parent_id}")
+
+                break
+       
+        
+        # Si es un bucle, retorna True
+        if parent_block in loops:
+            #print(f"Se encontró un bucle")
+            return True
+
+        # Si es una condición, verificamos los sub-bloques (si los tiene)
+        elif parent_block in conditionals:
+            #print(f"Se encontró una condición")
+            
+            # Verificamos los bloques siguientes (next)
+            next_block_ids = substack['next']
+            if next_block_ids:
+                #print(f"Verificando siguientes bloques para el bloque if")
+                self.has_nested_loops(next_block_ids[0])
+               
+        else: #Si no encuentra un if o else debemos de mirar el 1.1.2
+            #print(f" Comprobando bucles. No es un bucle ni una condición. Verificando el siguiente bloque en la jerarquía.")
+            current_id = parent_id
+            #print("holaaaa")
+            #print(current_id)
+            current_parts = current_id.split('.')  # Dividimos el ID por puntos (ej. '1.1' -> ['1', '1'])
+            #print("holaaaa")
+            # Vamos a buscar los siguientes bloques incrementando la última parte del ID
+            next_part = int(current_parts[-1]) + 1  # Incrementamos la última parte
+            current_parts[-1] = str(next_part)  # Reemplazamos la última parte con el nuevo valor
+            #print("holaaaa")
+            # Ahora construimos el siguiente ID
+            next_id = '.'.join(current_parts)  # Convertimos la lista de nuevo en un ID
+            # Verificamos si el siguiente bloque existe y lo procesamos
+            next_block = next((block for block in self.list_total_blocks if block["id"] == next_id), None)
+            #print("holaaaa")
+           # print(next_block)
+            if next_block:
+                #print(f"Verificando siguiente bloque con ID: {next_id}")
+                if self.has_nested_loops(next_block['id']):
+                    return True
+
 
         return False

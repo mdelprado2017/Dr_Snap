@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!-- SITE TITLE -->
-    <title>Dr. Scratch</title>
+    <title>Dr. Snap</title>
 
 
     <link rel="stylesheet" href="/static/app/content/style.css">
@@ -239,7 +239,7 @@
                     <div class="navbar-collapse collapse" height="200px" id="stamp-navigation">
                    
                       <a class="text-center" href="/">
-                        <img class="d-block img-fluid ::before" height="100px" src="/static/app/images/logo_main.png" alt="">
+                        <img class="d-block img-fluid ::before" height="100px" src="/static/app/images/final.jpg" alt="">
                       </a>
                         <!-- LANGUAGUES -->
                         
@@ -359,19 +359,13 @@
                         <div class="intro-section">
                             
                             <!-- WELCOM MESSAGE -->
-                            <h1 class="intro white-text">{% trans "This is a Beta version" %}</h1>
+                            <h1 class="intro white-text">{% trans "This is a Final Degree project version" %}</h1>
 
-                            <h3 align=center class="transparent-text"><strong>{% trans "We are still working on it. If you have any comments or ideas please contact us" %} <a href="{% url 'contact' %}">{% trans "here" %}</a>. <br>
-                                      <!-- OLD VERSION -->
-                                      <!-- END OLD VERSION -->
+    
                             <br></br>
-                            <h4 align=justify class="transparent-text"><strong>{% trans "Welcome to the Dr. Scratch website, an analytical tool that evaluates your Scratch projects in a variety of computational areas. This analyzer is a helpful tool to evaluate your own projects, or those of your Scratch students." %} </strong></h4>
+                            <h4 align=justify class="transparent-text"><strong>{% trans "Welcome to the Dr. Snap website, an analytical tool that evaluates your Snap projects in a variety of computational areas. This analyzer is a helpful tool to evaluate your own projects, or those of your Snap students." %} </strong></h4>
 
-                            <!-- BUTTON -->
-                            <div class="button hidden-xs">
-                                <a href="#section1" class="btn btn-primary secondary-button">{% trans "Learn more" %}</a>
-                            </div>
-                            <!-- /END BUTTON -->
+                           
 
                         </div>
 
@@ -389,14 +383,14 @@
 
                             <div class="vertical-project-form">
 
-                                <h5 class="dark-text form-heading"><strong>{% trans "There are two options to analyze your Scratch project now!" %}</strong></h5>
+                                <h5 class="dark-text form-heading"><strong>{% trans "There are two options to analyze your Snap project now!" %}</strong></h5>
 
                                     {% csrf_token %}
                                     
                                     <form name="form" id="main-form" class="project-form" enctype="multipart/form-data" method="post" action="/show_dashboard/">
                                         <input type="hidden" name="dashboard_mode" value="Default">
                                         <h5 class="text-input" style="font-weight: lighter;">
-                                            {% trans "1. Introduce the <span class='colored-text'><a data-toggle='modal' href='#modalUrl'>url</a></span> of your Scratch project, you don't have to download it:" %}
+                                            {% trans "1. Introduce the <span class='colored-text'><a data-toggle='modal' href='#modalUrl'>url</a></span> of your Snap project, you don't have to download it:" %}
                                         </h5>
                                         {% trans '<input name="urlProject" id="cf-name" class="form-control input-box placeholder" placeholder="http:/scratch.mit.edu/projects/your_number" type="text">' %}
                                         <p id="url-warning" style="display: none;">
@@ -452,78 +446,9 @@
         </div>
 
 
-    <!-- =========================
-     SECTION: CLIENTS LOGOs
-    ============================== -->
-    <section id="section6" class="services grey-bg">
-    <div class="clients white-bg">
-        <ul class="client-logos">
-            <li>
-                <a href="http://programamos.es">
-                <img src="/static/app/images/logoProgramamos.png" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="http://www.urjc.es">
-                <img src="/static/app/images/logoURJC.jpg" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="https://www.us.es/">
-                <img src="/static/app/images/logoUS.png" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="https://www.northeastern.edu/">
-                <img src="/static/app/images/logoNortheastern.png" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="http://libresoft.es">
-                <img src="/static/app/images/logoLibresoft.jpeg" alt="">
-                </a>
-            </li>
-
-            <li>
-                <a href="http://www.fecyt.es">
-                <img src="/static/app/images/logoFECYT.jpg" alt="">
-                </a>
-            </li>
-
-        </ul>
-    </div>
-    </section>
+   
     </header>
-    <!-- =========================
-     SECTION: CSV
-    ============================== -->
-    <section id="section1" class="services">
-
-        <div class="container">            
-            <div class="row">
-                <div class="col-md-8 text-center">
-                    <img src="/static/app/images/csvs.png" class="img-fluid mx-auto d-block" style="max-width: 90%; max-height: 90%;" alt=""> 
-                </div>
-                <div class="col-md-4 align-self-center">
-                    <form name="form" class="project-form" id="batch-form" enctype="multipart/form-data" method="post" action="/show_dashboard/" style="margin-top: 50px;">
-                        <h3><strong>{% trans "Batch Mode" %}</strong></h3>
-
-                        <p><span class='colored-text'>{% trans "IMPORTANT!" %}</span> {% trans "Please upload a <span class='colored-text'><a data-toggle='modal' href='#modalTxt'>txt</a></span> containing the URLs of the projects, with each URL on a separate line. Or a <span class='colored-text'>zip</span> containing the .sb3 (Max. 10)" %}</p>
-
-                        <input type="hidden" name="dashboard_mode" value="Default">
-                        {% trans "<input name='urlsFile' type='file' class='filestyle' data-buttonText='Choose txt or zip'>" %}
-                        {% trans '<input name="batch-email" class="form-control input-box placeholder" placeholder="your@email.com" type="text">' %}
-                        <p id="email-warning" style="display: none;"><span class='colored-text'>{% trans "Please enter an email!" %}</span></p>
-                        <p id="txt-warning" style="display: none;"><span class='colored-text'>{% trans "Please upload a txt/zip file!" %}</span></p>
-                        <button id="urls" name='_urls' type="submit" class="btn btn-primary standard-button">{% trans "Analyze my projects" %}</button>
-                        <br></br>
-                        {% csrf_token %}
-                    </form>
-                </div>
-            </div> 
-            
-        </div>
-    </section>
+    
 
     <!-- =========================
      SECTION: PERSONALIZED
@@ -545,7 +470,7 @@
                     
                 </div>
                 <div class="col-md-8 text-center">
-                    <img src="/static/app/images/personalized.png" class="img-fluid mx-auto d-block" style="max-width: 90%; max-height: 90%;" alt=""> 
+                    <img src="/static/app/images/personalized_snap.png" class="img-fluid mx-auto d-block" style="max-width: 90%; max-height: 90%;" alt=""> 
                 </div>
             </div> 
             
@@ -561,7 +486,7 @@
         <div class="container">            
             <div class="row">
                 <div class="col-md-8 text-center">
-                    <img src="/static/app/images/assistant.png" class="img-fluid mx-auto d-block" style="max-width: 90%; max-height: 90%;" alt=""> 
+                    <img src="/static/app/images/Assistant_snap.png" class="img-fluid mx-auto d-block" style="max-width: 90%; max-height: 90%;" alt=""> 
                 </div>
                 <div class="col-md-4 align-self-center">
                     <br>
@@ -579,156 +504,16 @@
             </div> 
             
         </div>
-    </section>
-
-    <!-- =========================
-     SECTION: COMPARATIVE
-    ============================== -->
-    <section id="section1" class="services" style="padding-left: 7%;">
-        <div class="container">            
-            <div class="row">
-                <div class="col-md-4 align-self-center" style="margin-top: 50px;">
-                    <h3><strong>{% trans "Comparison Mode" %}</strong></h3>
-                    <p class="h4">
-                        {% trans "The comparison mode allows you to compare two different projects, enabling you to highlight their key differences and gain detailed insights into each." %}
-                    </p>
-
-                    <a href="{% url 'compare_uploader' %}">
-                        <button id="urls" name='_urls' type="submit" class="btn btn-primary standard-button">{% trans "Compare Projects" %}</button>
-                    </a>
-                    
-                </div>
-                <div class="col-md-8 text-center">
-                    <img src="/static/app/images/Comparative Mode.png" class="img-fluid mx-auto d-block" style="max-width: 90%; max-height: 90%;" alt=""> 
-                </div>
-            </div> 
-            
-        </div>
-    </section>
-
+    
     <br></br>
-    <h2>{% trans "A powerful tool to analyze your Scratch projects" %}</h2>
-    <img src="/static/app/images/main_screens.png" class="img-fluid" width="70%" alt="">
 
 
-    <!-- =========================
-     SECTION: PRIZES
-    ============================== -->
-    <section id="section1" class="services">
-
-        <div class="container">
-            
-
-            <div class="container">
-                <div class="row align-items-right">
-                    <div class="col">
-                        <h1>{% trans "Winner of " %}</h1>
-                    </div>
-                    <div class="col">
-                        <img src="/static/app/images/rise_award.png" class="img-fluid" alt="" width="40%">
-                    </div>
-                </div>
-            </div>
-            
-            
-            
-            
-            
-            <blockquote class="blockquote text-center">
-                <p class="mb-0">{% trans "For the first time, a Spanish team, made up of researchers from the Rey Juan Carlos University of Madrid and professors from the Sevillian association Programamos, has been awarded a Google RISE Award, for the project Dr. Scratch." %}</p>
-                <footer class="blockquote-footer">{% trans "Article of " %}<cite title="Source Title">National Institute of Educational and Teacher Technologies</cite></footer>
-              </blockquote>
-        </div>
-        <br></br>
-            </section>
-    </section>
-
-
-    <!-- =========================
-     SECTION: WIKI
-    ============================== -->
-    <section id="section1" class="services">
-
-        <div class="container">
-            <!-- SECTION HEADER -->
-            <div class="section-header">
-
-                <h2 class="dark-text">{% trans "Check the" %}<strong>{% trans " wiki " %} </strong>{% trans "of Dr.Scratch." %}</h2>
-
-            </div>
-
-            <div class="row">
-
-               <!-- SINGLE SERVICE -->
-               <a href="{% url 'learn' "PersonalMode/" %}" ><div style="height: 700px;" class="col-md-3" id="bg-personalized"></div></a>
-               
-               
-                <!-- SINGLE SERVICE -->
-                <a href="{% url 'learn' "BatchMode/" %}"><div style="height: 700px;" class="col-md-3" id="bg-csv"></div></a>
-
-                <!-- SINGLE SERVICE -->
-                <a href="{% url 'learn' "DefaultMode/" %}"><div style="height: 700px;" class="col-md-3" id="bg-classic"></div></a>
-
-                <!-- SINGLE SERVICE -->
-                <div style="height: 700px;" class="col-md-3" id="bg-coming"></div>
-            
-            </div>
-        </div>
-        <br></br>
-            </section>
-    </section>
-
-    
 
 
     
 
 
-    <!-- =========================
-     SECTION: CONTACT
-    ============================== -->
-    <section id="section4" class="team grey-bg">
-        <div class="container">
-            <!-- SECTION HEADER -->
-            <div class="section-header">
-                <h2 class="dark-text">{% trans "<strong>Contact </strong> Dr. Scratch team</h2>" %}
-                <div class="colored-line">
-                    
-                </div>
-                <h3 align=center class="transparent-text-dark"><strong>{% trans "We are still working on it. If you have any comments or ideas please contact us" %} <a href="{% url 'contact' %}">{% trans "here" %}</a>. <br>
-
-            </div>
-
-
-       
-    </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="footer grey-bg">
-        <p>{% trans "©2024 Dr.Scratch Made with " %} <span style="color: #e25555;">&#9829;</span> {% trans "by " %} <a href="/collaborators">{% trans "Dr.Scratch Team." %}</a></p>
-
-        <!-- SOCIAL ICONS -->
-        <ul class="social-icons">
-            <li>
-                <a href="https://github.com/Daniesmor/Dr.Scratch-Northeastern"> 
-                    <i class="bi bi-github" style="color: black;"></i>
-                </a>
-            </li>
-            <li>
-                <a href="https://twitter.com/DrScratchTool">
-                    <i class="bi bi-twitter-x" style="color: black;"></i>
-                </a>
-            </li>    
-
-        </ul>
-
-    </footer>
-    </div>
-
-    <!-- =========================
-            MODALS
-    ============================== -->
+    
 
     <!-- =========================
             MODALS
@@ -1507,9 +1292,11 @@
 
 
         <div class="container">
-            <img src="../../static/app/images/logo_main.png"/>
-        </div>
+            <img src="/static/app/images/final.jpg" style="mix-blend-mode: multiply; background-color: transparent;"/>
 
+            
+        </div>
+        
 
 
         <div class = "container">
